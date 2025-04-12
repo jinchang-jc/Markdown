@@ -38,3 +38,24 @@ function updatePreview() {
     const markdown = document.getElementById('editor').value;
     document.getElementById('preview').innerHTML = marked.parse(markdown);
 }
+
+function exportPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // 将预览内容转换为PDF
+    const content = document.getElementById('preview').innerHTML;
+    
+    // 处理特殊字符（如长横线）
+    const formattedContent = content.replace(/—/g, '—'); // 确保实体编码正确
+    
+    doc.html(formattedContent, {
+        callback: function(doc) {
+            doc.save('markdown-output.pdf');
+        },
+        x: 10,
+        y: 10,
+        width: 190, // A4纸宽度
+        autoPaging: 'text'
+    });
+}
